@@ -446,22 +446,36 @@ function sortByAsc(arr) {
  */
 function shuffleChar(str, iterations) {
   if (str.length <= 1 || iterations <= 0) return str;
+  const initialSting = str;
   let resultStr = str;
   let subStr = resultStr;
-  for (let i = 1; i <= iterations; i += 1) {
-    let index = 0;
-    let oddStr = '';
-    let leftStr = '';
-    subStr = resultStr;
-    while (index < str.length) {
-      leftStr += subStr[index];
-      oddStr += subStr[index + 1];
+  let cycleNumber = 0;
+  const archive = new Map();
+  while (cycleNumber !== iterations) {
+    for (let i = 1; i <= iterations; i += 1) {
+      let index = 0;
+      let oddStr = '';
+      let leftStr = '';
+      subStr = resultStr;
+      while (index < str.length) {
+        leftStr += subStr[index];
+        oddStr += subStr[index + 1];
 
-      index += 2;
+        index += 2;
+      }
+      resultStr = leftStr + oddStr;
+      cycleNumber += 1;
+      archive.set(cycleNumber, resultStr);
+      if (resultStr === initialSting) {
+        break;
+      }
     }
-    resultStr = leftStr + oddStr;
   }
-  return resultStr;
+  let archiveIndex = cycleNumber;
+  if (archiveIndex < iterations) {
+    archiveIndex = iterations % cycleNumber;
+  }
+  return archive.get(archiveIndex);
 }
 
 /**
